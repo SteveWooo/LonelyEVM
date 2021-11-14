@@ -19,11 +19,11 @@ func main() {
 	// 调用发起者
 	caller := vm.AccountRef(common.HexToAddress("YOUE_NODE_ID"))
 
-	// 虚拟机初始化
+	// 初始化
 	var levm core.LEVM
 	levm.Init()
 
-	// 初始化虚拟机
+	// 创建虚拟机
 	levm.CreateEVM()
 
 	// 1 部署合约到state上
