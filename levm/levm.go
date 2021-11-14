@@ -1,4 +1,4 @@
-package main
+package levm
 
 import (
 	"math"
@@ -16,9 +16,8 @@ import (
 
 // Lonely EVM，封装了调用evm的方法。
 type LEVM struct {
-	UserConfig UserConfig
-	EVMConfig  EVMConfig
-	Evm        *vm.EVM
+	EVMConfig EVMConfig
+	Evm       *vm.EVM
 }
 
 func (levm *LEVM) Init() {
@@ -30,6 +29,11 @@ func (levm *LEVM) Init() {
 		cfg.State, _ = state.New(common.Hash{}, state.NewDatabase(rawdb.NewMemoryDatabase()), nil)
 	}
 
+	levm.EVMConfig = cfg
+}
+
+func (levm *LEVM) CreateEVM() {
+	cfg := levm.EVMConfig
 	// 创建一台EVM
 	txContext := vm.TxContext{
 		Origin:   cfg.Origin,
@@ -53,8 +57,6 @@ func (levm *LEVM) Init() {
 			cfg.State.AddAddressToAccessList(addr)
 		}
 	}
-
-	levm.EVMConfig = cfg
 }
 
 // 部署合约

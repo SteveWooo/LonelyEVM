@@ -5,45 +5,43 @@ import (
 	"io/ioutil"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
 
 	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/ethereum/go-ethereum/crypto"
+	core "github.com/stevewooo/LonelyEVM/levm"
 )
 
-type UserConfig struct {
-	PrivateKey string
-	NodeID     string
-}
-
 func main() {
-	userConfig := UserConfig{
-		"8e1e5e540a07954e07a840d89eeed064b58ec16346b118ca6ad25831211f2ad6",
-		"047204499d849948aaffdec7ce2703f5b3",
-	}
-
-	contractBinFile, _ := ioutil.ReadFile("./demo_contracts/contract_sol_Storage.bin")
+	// 获取编译后的合约数据。hex格式
+	contractBinFile, _ := ioutil.ReadFile("./demo_contracts/contract_sol_Hello.bin")
 	contractBinFile = common.Hex2Bytes(string(contractBinFile))
-	input := crypto.Keccak256([]byte("get()"))[0:4]
-	caller := vm.AccountRef(common.HexToAddress(userConfig.NodeID))
 
-	var levm LEVM
-	levm.UserConfig = userConfig
+	// 调用发起者
+	caller := vm.AccountRef(common.HexToAddress("YOUE_NODE_ID"))
+
 	// 虚拟机初始化
+	var levm core.LEVM
 	levm.Init()
 
-	// 先把合约部署了
+	// 初始化虚拟机
+	levm.CreateEVM()
+
+	// 1 部署合约到state上
 	contractAddress, _, err := levm.Deploy(caller, contractBinFile, levm.EVMConfig.GasLimit, levm.EVMConfig.Value)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	// 再调用合约
-	ret, leftgas, err := levm.Call(caller, contractAddress, input, levm.EVMConfig.GasLimit, levm.EVMConfig.Value)
+	// 获取调用的函数地址。函数名和参数名组成的字符串，哈希后的8个位
+	input := crypto.Keccak256([]byte("get()"))[0:4]
+
+	// 2 调用合约
+	ret, _, err := levm.Call(caller, contractAddress, input, levm.EVMConfig.GasLimit, levm.EVMConfig.Value)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	fmt.Println(string(ret), "left gas: ", leftgas)
+	fmt.Println(string(ret))
 }
