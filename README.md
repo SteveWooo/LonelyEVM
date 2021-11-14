@@ -32,7 +32,7 @@ fmt.Println(string(ret))
 ## 使用示范
 本章介绍一个 Hello World 合约的编译与使用，此处使用的是0.7版本的solidity。
 #### 合约编译
-1. 编写合约，保存到 ./contract.sol 文件中
+##### 1. 编写合约，保存到 ./contract.sol 文件中
 ```
 pragma solidity ^0.7.0;
 contract Hello {
@@ -41,7 +41,7 @@ contract Hello {
     }
 }
 ```
-2. 安装solc与编译合约
+##### 2. 安装solc与编译合约
 安装solcjs。您也可以使用 http://remix.hubwiz.com/ 在线编译
 ```
 npm install solc@0.7.4
@@ -51,7 +51,7 @@ npm install solc@0.7.4
 node_modules/solc/solcjs --bin --abi contract.sol -o ./
 # 得到 contract_sol_Hello.bin 文件和 contract_sol_Hello.abi 文件
 ```
-3. 使用evm部署、调用合约
+##### 3. 使用evm部署、调用合约
 在您的项目中导入本项目的核心，并从以太坊项目引入一些常用的包
 ```
 import (
