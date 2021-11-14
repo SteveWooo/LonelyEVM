@@ -21,7 +21,7 @@ levm.CreateEVM()
 合约部署
 ```golang
 // 获得合约地址
-contractAddress, _, err := levm.Deploy(caller, contractBinFile, levm.EVMConfig.GasLimit, levm.EVMConfig.Value)
+contractAddress, _, err := levm.Deploy(caller, contractFile, levm.EVMConfig.GasLimit, levm.EVMConfig.Value)
 ```
 合约调用
 ```
@@ -57,8 +57,8 @@ node_modules/solc/solcjs --bin --abi contract.sol -o ./
 import (
   core "github.com/stevewooo/LonelyEVM/levm"
   "github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/core/vm"
+  "github.com/ethereum/go-ethereum/crypto"
+  "github.com/ethereum/go-ethereum/core/vm"
 )
 ```
 然后在代码中对快速对虚拟机进行初始化
@@ -69,13 +69,14 @@ levm.Init()
 
 // 创建虚拟机虚拟机
 levm.CreateEVM()
-
-contractBinFile := common.Hex2Bytes("编译后的合约HEX码，作字符串传入即可")
-caller := vm.AccountRef(common.HexToAddress("你的NODE_ID")) // 可以使用levm.EVMConfig.Origin代替
 ```
 然后部署合约，并获得合约地址
 ```
-contractAddress, _, err := levm.Deploy(caller, contractBinFile, levm.EVMConfig.GasLimit, levm.EVMConfig.Value)
+// 初始化一些合约部署的内容（合约文件和调用者）
+contractFile := common.Hex2Bytes("编译后的合约HEX码，作字符串传入即可")
+caller := vm.AccountRef(common.HexToAddress("你的NODE_ID")) // 可以使用levm.EVMConfig.Origin代替
+
+contractAddress, _, err := levm.Deploy(caller, contractFile, levm.EVMConfig.GasLimit, levm.EVMConfig.Value)
 	if err != nil {
 		fmt.Println(err)
 		return
