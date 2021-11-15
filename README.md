@@ -3,7 +3,7 @@
 ## 快速开始
 #### 安装
 ```
-go get github.com/stevewooo/LonelyEVM
+go get github.com/stevewooo/LonelyEVM@release-1.0
 ```
 #### 导入
 ```golang
