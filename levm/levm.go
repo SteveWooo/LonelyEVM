@@ -60,7 +60,11 @@ func (levm *LEVM) CreateEVM() {
 }
 
 // 部署合约
-func (levm *LEVM) Deploy(caller vm.ContractRef, code []byte, gas uint64, value *big.Int) (common.Address, uint64, error) {
+// @from 部署发起者
+// @data hex格式的智能合约代码
+func (levm *LEVM) Deploy(from string, data string, gas uint64, value *big.Int) (string, uint64, error) {
+	caller := vm.AccountRef(common.HexToAddress(from))
+	code := common.Hex2Bytes(data)
 	_, contractAddress, leftOverGas, err := levm.Evm.Create(
 		caller,
 		code,
@@ -68,19 +72,24 @@ func (levm *LEVM) Deploy(caller vm.ContractRef, code []byte, gas uint64, value *
 		value,
 	)
 
-	return contractAddress, leftOverGas, err
+	return contractAddress.String(), leftOverGas, err
 }
 
 // 调用合约
-func (levm *LEVM) Call(caller vm.ContractRef, contractAddress common.Address, input []byte, gas uint64, value *big.Int) ([]byte, uint64, error) {
+func (levm *LEVM) Call(from string, contractAddress string, data string, gas uint64, value *big.Int) (string, uint64, error) {
+	caller := vm.AccountRef(common.HexToAddress(from))
+	contractAddressFormat := common.HexToAddress(contractAddress)
+	input := common.Hex2Bytes(data)
 	// 调用合约
-	return levm.Evm.Call(
+	ret, _, err := levm.Evm.Call(
 		caller,
-		contractAddress,
+		contractAddressFormat,
 		input,
 		gas,
 		value,
 	)
+
+	return string(ret), 0, err
 }
 
 type EVMConfig struct {
