@@ -26,7 +26,7 @@ contractAddress, _, err := levm.Deploy(caller, contractFile, levm.EVMConfig.GasL
 #### 合约调用
 ```
 input := crypto.Keccak256([]byte("get()"))[0:4] // 合约函数调用地址
-ret, _, err := levm.Call(caller, contractAddress, input, levm.EVMConfig.GasLimit, levm.EVMConfig.Value)
+ret, _, err := levm.Call(caller, contractAddress, common.Byte2Hex(input), levm.EVMConfig.GasLimit, levm.EVMConfig.Value)
 fmt.Println(string(ret))
 ```
 ## 使用示范
