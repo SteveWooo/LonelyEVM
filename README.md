@@ -26,7 +26,7 @@ contractAddress, _, err := levm.Deploy(caller, contractFile, levm.EVMConfig.GasL
 #### 合约调用
 ```
 input := crypto.Keccak256([]byte("get()"))[0:4] // 合约函数调用地址
-ret, _, err := levm.Call(caller, contractAddress, input, levm.EVMConfig.GasLimit, levm.EVMConfig.Value)
+ret, _, err := levm.Call(caller, contractAddress, common.Byte2Hex(input), levm.EVMConfig.GasLimit, levm.EVMConfig.Value)
 fmt.Println(string(ret))
 ```
 ## 使用示范
@@ -73,11 +73,7 @@ levm.CreateEVM()
 ```
 3. 然后部署合约，并获得合约地址
 ```
-// 初始化一些合约部署的内容（合约文件和调用者）
-contractFile := common.Hex2Bytes("编译后的合约HEX码，作字符串传入即可")
-caller := vm.AccountRef(common.HexToAddress("你的NODE_ID")) // 可以使用levm.EVMConfig.Origin代替
-
-contractAddress, _, err := levm.Deploy(caller, contractFile, levm.EVMConfig.GasLimit, levm.EVMConfig.Value)
+contractAddress, _, err := levm.Deploy("你的NODE_ID", "编译后的合约HEX码，作字符串传入即可", levm.EVMConfig.GasLimit, levm.EVMConfig.Value)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -89,7 +85,7 @@ contractAddress, _, err := levm.Deploy(caller, contractFile, levm.EVMConfig.GasL
 // 获取调用的函数地址。函数名和参数名组成的字符串，哈希后的8个位
 input := crypto.Keccak256([]byte("get()"))[0:4]
 
-ret, _, err := levm.Call(caller, contractAddress, input, levm.EVMConfig.GasLimit, levm.EVMConfig.Value)
+ret, _, err := levm.Call(caller, contractAddress, common.Byte2Hex(input), levm.EVMConfig.GasLimit, levm.EVMConfig.Value)
 if err != nil {
   fmt.Println(err)
   return
