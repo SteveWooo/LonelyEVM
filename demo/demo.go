@@ -42,5 +42,5 @@ func main() {
 		return
 	}
 
-	fmt.Println(ret)
+	fmt.Println(string(ret))
 }

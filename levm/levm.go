@@ -76,7 +76,7 @@ func (levm *LEVM) Deploy(from string, data string, gas uint64, value *big.Int) (
 }
 
 // 调用合约
-func (levm *LEVM) Call(from string, contractAddress string, data string, gas uint64, value *big.Int) (string, uint64, error) {
+func (levm *LEVM) Call(from string, contractAddress string, data string, gas uint64, value *big.Int) ([]byte, uint64, error) {
 	caller := vm.AccountRef(common.HexToAddress(from))
 	contractAddressFormat := common.HexToAddress(contractAddress)
 	input := common.Hex2Bytes(data)
@@ -89,7 +89,7 @@ func (levm *LEVM) Call(from string, contractAddress string, data string, gas uin
 		value,
 	)
 
-	return string(ret), 0, err
+	return ret, 0, err
 }
 
 type EVMConfig struct {
