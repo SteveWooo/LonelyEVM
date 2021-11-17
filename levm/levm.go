@@ -92,6 +92,22 @@ func (levm *LEVM) Call(from string, contractAddress string, data string, gas uin
 	return ret, 0, err
 }
 
+// 静态调用合约，不会修改内容
+func (levm *LEVM) StaticCall(from string, contractAddress string, data string, gas uint64, value *big.Int) ([]byte, uint64, error) {
+	caller := vm.AccountRef(common.HexToAddress(from))
+	contractAddressFormat := common.HexToAddress(contractAddress)
+	input := common.Hex2Bytes(data)
+	// 调用合约
+	ret, _, err := levm.Evm.StaticCall(
+		caller,
+		contractAddressFormat,
+		input,
+		gas,
+	)
+
+	return ret, 0, err
+}
+
 type EVMConfig struct {
 	ChainConfig *params.ChainConfig
 	Difficulty  *big.Int
